@@ -27,7 +27,7 @@ Below is given a roadmap course. Since the course is actually held for the first
 Each Sol contains lecture, lab session and assignment materials. 
 
 Martian Roadmap:
-- [1 Sol: ](lectures/stub)
+- [1 Sol: ](lectures/lecture1.pdf)
     - [Lab Session 1](labs/stub)
     - [Assignment 1](assignments/stub)
 ___
