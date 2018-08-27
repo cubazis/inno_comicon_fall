@@ -12,13 +12,12 @@ ___
 - Compiler development technologies
 - On what stages program optimization can be done
 
+## Some introductory task here
+Quiz (Cahoot)
+___
+
 ## Objectives
 
-Quiz:
-- List stages of compilation and explain functions of each one
-- Explain the difference between compilation & interpretation
-- Give examples of the same syntax having different semantics and different syntax having the same semantics
-___
 Materials
 - Define **token**, **pattern** and **lexeme**
 - Given the description of allowed expressions, construct a valid grammar
@@ -28,8 +27,6 @@ Materials
 - Given a compiler error, determine whether it was caught on the lexical analysis stage (invalid symbol) or further stages
 - Prepare a plan of how they would implement a simple expression compiler
 
-## Some introductory task here
-1) Quiz (Cahoot)
 
 ## Concepts --- Grammars; Lexical analysis
 - What is lexical analysis
@@ -149,19 +146,36 @@ int     (*(*x)[10])();
 float   y[10];  
 struct  a_struct *z;
 ```
+___
 
 ### Coding
 
 A token is an input symbol taken as a unit, a lexeme is the string that represents that symbol.
 ![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_1.jpg)
+**Syntax Diagram**
 
-## Check yourself
+*yytext* points at the current lexeme, which is not '\0' terminated; 
+*yy1eng* is the number of characters in the lexeme;
+*yylineno* is the current input line number.
 
-## Rubrics
+Features:
+- buffering input stream
+- lookahead
+- pushback
+- match & advance
+- Lookahead variable holds the lookahead token
+
+![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_2.jpg)
+**Grammar**
+
+![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_3.jpg)
+**Subroutine Trace for 1 + 2**
 
 ## Homework
+**Expression calculator**
+
 [Assignment 1](assignments/ha1/ha1.pdf)
 
-### Expression calculator
+___
 
-## Reference
+### Thank you
