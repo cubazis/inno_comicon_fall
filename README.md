@@ -28,9 +28,9 @@ Each Sol contains lecture, lab session and assignment materials.
 
 Martian Roadmap:
 - [1 Sol: ](lectures/lecture1.pdf)
-- [2 Sol: ](lectures/lecture2.pdf)
+- [2 Sol: ](lectures/lecture1.pdf)
     - [Lab Session 1](labs/lab1/README.md)
-    - [Assignment 1](assignments/ha1/README.md)
+    - [Assignment 1](assignments/ha1/ha1.pdf)
 ___
 
 Schedule and team lineups can be found on [wiki page](https://github.com/cubazis/inno_comicon_fall/wiki/Schedule-&-lineups
