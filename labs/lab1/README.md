@@ -150,13 +150,11 @@ ___
 
 ## Coding
 
-# “ComiCon” Notes
-
 ### Stage one. Repentance.
 
 First, let me apologize (as usual at our university) for the inconvenience. lol.
 
-It was assumed that the first lab session we have an interactive code practive. That is why such things as the names of the service variables for implementing the lexical analyzer (*yytext*; *yy1eng*; *yylineno*) were incomprehensible to you. 
+It was assumed that the first lab session we have an interactive code practive. That is why such things as the names of the service variables for implementing the lexical analyzer (*yytext*; *yyleng*; *yylineno*) were incomprehensible to you. 
 
 Soryan. Now we will fix it.
 ___
@@ -180,19 +178,11 @@ The BNF grammar below that recognizes a list of one or more statements, each of 
 
 #### BNF Grammar v1.0
 
-$$
-\textit{statements} \rightarrow \textit{expression  ;} \ \ | \ \ \textit{expression ; statements} 
-\\
-\textit{expression} \rightarrow \textit{expression + term} \ \ | \ \ \textit{term} 
-\\
-\textit{term} \rightarrow \textit{term * factor} \ \ | \ \ \textit{factor} 
-\\
-\textit{factor} \rightarrow \textbf{number} \ \ | \ \ \textit{( expression )}
-$$
+![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_5.jpg)
 
 This grammar is recursive. It's not hard to notice. When parsing a sentence corresponding to this grammar, a lookahead mechanism is used. 
 
-To understand what it's about, look at the last line. Here is a choice between two alternatives when expanding a $\textit{factor}$. The parser can choose which alternative to apply by looking at the next input symbol. If this symbol is a number, then the compiler applies left alternative and replaces the $\textit{factor}$ with a $\textbf{number}$. If the next input symbol was an open parenthesis, the parser would use $\textit{( expression )}$.
+To understand what it's about, look at the last line. Here is a choice between two alternatives when expanding a *factor*. The parser can choose which alternative to apply by looking at the next input symbol. If this symbol is a number, then the compiler applies left alternative and replaces the *factor* with a **number**. If the next input symbol was an open parenthesis, the parser would use *( expression )*.
 
 The problem of this grammar lies in the third line. 
 
@@ -229,28 +219,16 @@ Now when we have a set of tokens, we'll try to compose the Grammar and the corre
 
 #### BNF Grammar v2.0
 
-$$
-\textit{statements} \rightarrow \textit{expression  ;} \vdash \ \ | \ \ \textit{expression ; statements} 
-\\
-\textit{expression} \rightarrow \textit{term expression'} 
-\\
-\textit{expression'} \rightarrow \textit{+ term expression'} \ \ | \ \ \epsilon
-\\
-\textit{term} \rightarrow \textit{factor term'} 
-\\
-\textit{term'} \rightarrow \textit{* factor term'} \ \ | \ \ \epsilon 
-\\
-\textit{factor} \rightarrow \textbf{number} \ \ | \ \ \textit{( expression )}
-$$
+![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_6.jpg)
 
-Don't be afraid of $\vdash$ symbol. It's just the end of input. Usually it's an EOF signal in a system ([tty](https://en.wikipedia.org/wiki/Tty_(unix))).
+Don't be afraid of ⊢ symbol. It's just the end of input. Usually it's an EOF signal in a system ([tty](https://en.wikipedia.org/wiki/Tty_(unix))).
 
-*To my taste it's better to explicitly indicate that at the level of abstraction of the machine we stop reading the intup stream by using $\vdash$ symbol. But canonically in the BNF you will not see this.*
+*To my taste it's better to explicitly indicate that at the level of abstraction of the machine we stop reading the intup stream by using ⊢ symbol. But canonically in the BNF you will not see this.*
 
 #### Syntax Diagram
 ![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_1.jpg)
 
-How it works. Let's consider parser Syntax Tree and  Subroutine Trace for $1 + 2$ expression.
+How it works. Let's consider parser Syntax Tree and  Subroutine Trace for **1 + 2** expression.
 
 #### Syntax Tree
 ![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_4.jpg)
@@ -261,7 +239,7 @@ How it works. Let's consider parser Syntax Tree and  Subroutine Trace for $1 + 2
 In context of Subroutine Trace *statements*, *expression*, *term*, *expr_prime*, *factor*, *term_prime* etc. are calls of implemented functions.
 
 *P.S. prime suffix means <'> in Grammar:
-$\textit{expression'}$ is the same as **void expr_prime()** in code template. Please be careful.*
+*expression'* is the same as **void expr_prime()** in code template. Please be careful.*
 
 ___
 
@@ -291,9 +269,9 @@ END_TEST
 ```
 **lex()** function returns the number from the tokens set, determined in *lex.h* file.
 
-You see that the *input* is an empty string. In our grammar it's an $\epsilon$ element. So, this is permissible value. 
+You see that the *input* is an empty string. In our grammar it's an ϵ element. So, this is permissible value. 
 
-As mentioned above, this means that the sentence consists only of an empty character and the machine recognizes this as the end of the input $\vdash$, and return $0$ value according to **_EOI** from the token set.
+As mentioned above, this means that the sentence consists only of an empty character and the machine recognizes this as the end of the input ⊢, and return **0** value according to **_EOI** from the token set.
 
 ___
 - **Task 2: test *lex()* by adding tests in test_parcer.c. Start from 30 line.**
