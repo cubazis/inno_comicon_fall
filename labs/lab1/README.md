@@ -148,28 +148,265 @@ struct  a_struct *z;
 ```
 ___
 
-### Coding
+## Coding
 
-A token is an input symbol taken as a unit, a lexeme is the string that represents that symbol.
+# “ComiCon” Notes
+
+### Stage one. Repentance.
+
+First, let me apologize (as usual at our university) for the inconvenience. lol.
+
+It was assumed that the first lab session we have an interactive code practive. That is why such things as the names of the service variables for implementing the lexical analyzer (*yytext*; *yy1eng*; *yylineno*) were incomprehensible to you. 
+
+Soryan. Now we will fix it.
+___
+
+### Stage two. Lab session *key goals*.
+
+The first **purpose** of lab session is the implementation of a lexical analyzer and parser bundle for a simple grammar. There are various modifications of this bundle. We will try to implement a concept based on **Recursive-Descent**. Grammar involves simple operations of *multiplication* and *addition*, as well as the presence of *numerical* and *alphabetic* lexemes. The second **purpose** of lab session is to develop your habit of test-driven development (TDD). 
+
+The parser is kind of recognizer program. If it terminate without an error, the input sentence is a legal sentence in the grammar. So the parser+lexical analyzer bundle is an automata for legal input sentences.
+
+The **lexical analyzer** is typically a self-contained unit that interfaces with the rest of the compiler via a small number (typically one or two) of subroutines and global variables.
+
+A **parser** is a group of subroutines that converts a token stream into a parse tree, and a parse tree is a structural representation of the sentence being parsed.
+___
+
+### Stage three. How to do wrong.
+
+Let's take a simple example.
+
+The BNF grammar below that recognizes a list of one or more statements, each of which is an arithmetic expression followed by a semicolon. Statements are made up of a series of semicolon-delimited expressions, each comprising a series of numbers separated either by asterisks (for multiplication) or plus signs (for addition).
+
+#### BNF Grammar v1.0
+
+$$
+\textit{statements} \rightarrow \textit{expression  ;} \ \ | \ \ \textit{expression ; statements} 
+\\
+\textit{expression} \rightarrow \textit{expression + term} \ \ | \ \ \textit{term} 
+\\
+\textit{term} \rightarrow \textit{term * factor} \ \ | \ \ \textit{factor} 
+\\
+\textit{factor} \rightarrow \textbf{number} \ \ | \ \ \textit{( expression )}
+$$
+
+This grammar is recursive. It's not hard to notice. When parsing a sentence corresponding to this grammar, a lookahead mechanism is used. 
+
+To understand what it's about, look at the last line. Here is a choice between two alternatives when expanding a $\textit{factor}$. The parser can choose which alternative to apply by looking at the next input symbol. If this symbol is a number, then the compiler applies left alternative and replaces the $\textit{factor}$ with a $\textbf{number}$. If the next input symbol was an open parenthesis, the parser would use $\textit{( expression )}$.
+
+The problem of this grammar lies in the third line. 
+
+Here the compiler can not cope with the choice of the alternative and a **conflict** arises.
+
+___
+- **Task 1: think and try to answer what is the conflict arises**
+___
+
+I believe that you have mastered the understanding of the conflict. Now we can move on to a more pumped-up version of the grammar that meets the requirements of our task.
+___
+
+### Stage four. How to do it right.
+
+First we confine ourselves to the case when there are only numbers, and we will try to describe the set of tokens. 
+
+A token is an input symbol taken as a unit, a lexeme is the string that represents that symbol. 
+
+The tokens are defined with the macros at the top of *parcer.h* file.
+
+```c
+#define _EOI           0		/*  end of input (EOF signal typically) */
+#define _SEMI          1		/*       ;                              */
+#define _PLUS          2		/*       +                              */
+#define _TIMES         3		/*       *                              */
+#define _LP            4		/*       (                              */
+#define _RP            5		/*       )                              */
+#define _NUM           6		/* decimal number                       */
+```
+The **_NUM** token is used both for numbers so, they are made up of a series of contiguous characters in the range *'0'-'9'*. The lexical analyzer translates a semicolon into a **_SEMI** token, a series of digits into a **_NUM** and so on. 
+___
+
+Now when we have a set of tokens, we'll try to compose the Grammar and the corresponding Syntax Diagrams.
+
+#### BNF Grammar v2.0
+
+$$
+\textit{statements} \rightarrow \textit{expression  ;} \vdash \ \ | \ \ \textit{expression ; statements} 
+\\
+\textit{expression} \rightarrow \textit{term expression'} 
+\\
+\textit{expression'} \rightarrow \textit{+ term expression'} \ \ | \ \ \epsilon
+\\
+\textit{term} \rightarrow \textit{factor term'} 
+\\
+\textit{term'} \rightarrow \textit{* factor term'} \ \ | \ \ \epsilon 
+\\
+\textit{factor} \rightarrow \textbf{number} \ \ | \ \ \textit{( expression )}
+$$
+
+Don't be afraid of $\vdash$ symbol. It's just the end of input. Usually it's an EOF signal in a system ([tty](https://en.wikipedia.org/wiki/Tty_(unix))).
+
+*To my taste it's better to explicitly indicate that at the level of abstraction of the machine we stop reading the intup stream by using $\vdash$ symbol. But canonically in the BNF you will not see this.*
+
+#### Syntax Diagram
 ![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_1.jpg)
-**Syntax Diagram**
 
-*yytext* points at the current lexeme, which is not '\0' terminated; 
-*yy1eng* is the number of characters in the lexeme;
-*yylineno* is the current input line number.
+How it works. Let's consider parser Syntax Tree and  Subroutine Trace for $1 + 2$ expression.
 
-Features:
-- buffering input stream
-- lookahead
-- pushback
-- match & advance
-- Lookahead variable holds the lookahead token
+#### Syntax Tree
+![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_4.jpg)
 
-![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_2.jpg)
-**Grammar**
-
+#### Subroutine Trace
 ![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/1_3.jpg)
-**Subroutine Trace for 1 + 2**
+
+In context of Subroutine Trace *statements*, *expression*, *term*, *expr_prime*, *factor*, *term_prime* etc. are calls of implemented functions.
+
+*P.S. prime suffix means <'> in Grammar:
+$\textit{expression'}$ is the same as **void expr_prime()** in code template. Please be careful.*
+
+___
+
+### Stage five. In code we trust.
+
+The are three variables at top of *parcer.h* are used by the lexical analyzer to pass information to the parser:
+
+- *yytext* points at the current lexeme, which is not '\0' terminated;
+- *yyleng* is the number of characters in the lexeme;
+- *yylineno* is the current input line number.
+
+The lexical analyzer is already implemented. The idea is to realize its code and test it! You can never be sure that the instructor gives you a suitable material, so test the *lex()* function by using *test_parser.c* test suite structure. Let me help you and start with simple *test_lex_0* test:
+
+```c=
+START_TEST (test_lex_0)
+{
+	char* input = "";
+	char* pattern = 0;
+	file = fmemopen(input, strlen(input), "r");
+
+	int res = (int)lex();
+	
+	printf("%d\n", res);
+	ck_assert_int_eq(res, pattern);
+}
+END_TEST
+```
+**lex()** function returns the number from the tokens set, determined in *lex.h* file.
+
+You see that the *input* is an empty string. In our grammar it's an $\epsilon$ element. So, this is permissible value. 
+
+As mentioned above, this means that the sentence consists only of an empty character and the machine recognizes this as the end of the input $\vdash$, and return $0$ value according to **_EOI** from the token set.
+
+___
+- **Task 2: test *lex()* by adding tests in test_parcer.c. Start from 30 line.**
+___
+
+P.S. 
+
+lex() implemented in terms of FILE descriptor processing, because we want to check it not only in a test suite, but *demo.c* too. So that's why I had to use special function
+
+```c=
+FILE *fmemopen (void *bf, size_t size, const char *mode)
+```
+This functions implemented for GNU C Compilers only. If you use it, delete my implementation, and use GNU implementation from *stdio.h*
+
+P.P.S. As you can see too specific parser internal entities have been used:
+```c=
+/** parser internal entity to process the input stream */
+FILE * file;
+/** parser internal entity to provide parsing result*/
+char parser_result[1000];
+```
+this was done to enable the testing of architecture.
+___
+
+### Stage six. Lab session practice.
+
+Now you know how the *lex()* works. What about parser?
+
+I've implemented several *entry concepts* for you.
+
+As you can see I provided all of the functions declarations in *parser.h* and their definition templates in *parcer.c*. 
+
+Several functions are already implemented. 
+
+#### Lookahead concept
+___
+- **Task 3: I offer you to realize the concept of Looking ahead and token matching by using this canonical implementation. Try to explain the advantages and disadvantages of this approach**
+___
+
+```c=
+static int Lookahead = -1;      /* Lookahead token  */
+
+int match(int token )
+{
+	/* Return true if "token" matches the current lookahead symbol. */
+
+	if( Lookahead == -1 )
+		Lookahead = (int) lex();
+
+	return token == Lookahead;
+}
+
+void advance()
+{
+	/* Advance the lookahead to the next input symbol.  */
+
+	Lookahead = (int) lex();
+}
+```
+#### Grammar functions implementation
+___
+- **Task 4: Implement and tnext functions:**
+```c=
+void term();
+
+void expr_prime();
+
+void factor();
+
+void term_prime();
+```
+___
+
+Before doing this, carefully study the approach I used to generate the output value in *parser_result*. 
+
+I used adding the TOKEN name with one space to *parser_result* variable. 
+```c=
+strcat(parser_result, "TOKEN ");
+```
+
+The idea is to check equality of *parser_result* value and *pattern* value.
+
+```c=
+START_TEST (test_parser_0)
+{
+	char* input = ";";
+	char* pattern = "SEMI EOF";
+	file = fmemopen(input, strlen(input), "r");
+	statements();
+	printf("%s\n", parser_result);
+	ck_assert_str_eq(parser_result, pattern);
+	fclose(file);
+}
+END_TEST
+```
+*P.S. Be careful **EOF** token added without space.*
+
+___
+
+- **Task 5: Read the contents of the file *demo.c* and verify its functionality**
+
+This file process an input string from *in.txt* file and generate *out.txt* file.
+
+Use these commands in your shell:
+```bash=
+> c99 demo.c src/parcer.c
+
+> ./a.out
+```
+
+and check *out.txt* file contents.
+___
+
 
 ## Homework
 **Expression calculator**
