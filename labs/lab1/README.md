@@ -389,7 +389,7 @@ ___
 ## Homework
 **Expression calculator**
 
-[Assignment 1](assignments/ha1/ha1.pdf)
+[Assignment 1](https://github.com/cubazis/inno_comicon_fall/blob/dev/assignments/ha1/ha1.pdf)
 
 ___
 
