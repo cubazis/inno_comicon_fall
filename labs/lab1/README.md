@@ -13,7 +13,7 @@ ___
 - On what stages program optimization can be done
 
 ## Some introductory task here
-Quiz (Cahoot)
+Quiz (Kahoot)
 ___
 
 ## Objectives
