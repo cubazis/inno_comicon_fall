@@ -98,6 +98,9 @@ void expression()
 {
 	/* expression -> term expression' */
 
+	term();
+
+	expr_prime();
 	/** YOUR CODE HERE */
 }
 
@@ -105,7 +108,11 @@ void term()
 {
 	/* term -> factor term' */
 
+
 	/** YOUR CODE HERE */
+	factor();
+
+	term_prime();
 }
 
 void expr_prime()
@@ -115,6 +122,16 @@ void expr_prime()
 	 */
 
 	/** YOUR CODE HERE */
+	if (match(_PLUS)) {
+		strcat(parser_result, "PLUS ");
+		advance();
+
+		term();
+
+		expr_prime();
+	}
+
+
 }
 
 void term_prime()
@@ -124,6 +141,14 @@ void term_prime()
 	 */
 
 	/** YOUR CODE HERE */
+	if (match(_TIMES)) {
+		strcat(parser_result, "TIMES ");
+		advance();
+
+		factor();
+
+		term_prime();
+	}
 }
 
 void factor()
@@ -132,6 +157,19 @@ void factor()
 	 *          |     LP expression RP
 	 */
 	/** YOUR CODE HERE */
+	if (match(_NUM)) {
+		strcat(parser_result, "NUM ");
+		advance();
+	}
+	else if(match(_LP)) {
+		strcat(parser_result, "LP ");
+		advance();
+
+		expression();
+
+		strcat(parser_result, "RP ");
+		advance();
+	}
 }
 
 void statements()

@@ -28,7 +28,44 @@ START_TEST (test_lex_0)
 END_TEST
 
 /** YOUR TESTS HERE */
+START_TEST (test_lex_1)
+	{
+		char* input = "1";
+		char* pattern = 6;
+		file = fmemopen(input, strlen(input), "r");
 
+		int res = (int)lex();
+
+		printf("%d\n", res);
+		ck_assert_int_eq(res, pattern);
+	}
+END_TEST
+
+START_TEST (test_lex_2)
+	{
+		char* input = ")";
+		char* pattern = 5;
+		file = fmemopen(input, strlen(input), "r");
+
+		int res = (int)lex();
+
+		printf("%d\n", res);
+		ck_assert_int_eq(res, pattern);
+	}
+END_TEST
+
+START_TEST (test_lex_3)
+	{
+		char* input = "+";
+		char* pattern = 2;
+		file = fmemopen(input, strlen(input), "r");
+
+		int res = (int)lex();
+
+		printf("%d\n", res);
+		ck_assert_int_eq(res, pattern);
+	}
+END_TEST
 
 /***************************************************************************************************/
 /****************************            parser test cases           *******************************/
@@ -131,6 +168,8 @@ Suite* str_suite (void)
 
 
 	tcase_add_test(tcase, test_lex_0);
+	tcase_add_test(tcase, test_lex_1);
+	tcase_add_test(tcase, test_lex_2);
 
 	tcase_add_test(tcase, test_parser_0);
 	tcase_add_test(tcase, test_parser_1);

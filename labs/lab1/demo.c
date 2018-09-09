@@ -11,8 +11,8 @@ int main(void)
 	FILE * out = fopen( "out.txt" , "w");
 	statements();
 
-	printf("%s\n", result);
-	fprintf(out, result);
+	printf("%s\n", parser_result);
+	fprintf(out, parser_result);
 
 	fclose(file);
 	fclose(out);
