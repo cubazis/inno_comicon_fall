@@ -1,4 +1,4 @@
-# Assignment 1
+# Lab 1
 Code written on C#.
 
 ### Instruction
