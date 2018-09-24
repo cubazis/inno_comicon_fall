@@ -6,9 +6,7 @@ lex demo.lex
 
 bison -vd demo.y
 
-g++ lex.yy.c demo.tab.c
-
-clear
+c++ lex.yy.c demo.tab.c
 
 ./a.out < valid.demo
 
