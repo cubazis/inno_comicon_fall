@@ -78,6 +78,8 @@ $LR(k)-язык$ - генерируется $LR(k)-грамматикой$
 
 ___
 
+#### Example
+
 $E \rightarrow E + T$
 $E \rightarrow T$
 $T \rightarrow T*F$
@@ -85,9 +87,128 @@ $T \rightarrow F$
 $F \rightarrow (E)$
 $F \rightarrow x$
 
-Разберем восходящий анализ
+Consider bottom-up analysis of
 
 $x + x + x*x$
+
+___
+
+| Stack | Product | Sentence     | Operation |
+| -     |       - |        -     |         - |
+|       |         | x + x + x\*x |           |
+|   x   |         | x + x + x\*x |( S )      |
+|   F   | F -> x  | F + x + x\*x |( R )      |
+|   T   | T -> F  | T + x + x\*x |( R )      |
+|   E   | E -> T  | E + x + x\*x |( R )      |
+|   E+  |         | E + x + x\*x |( S )      |
+|   E+x |         | E + x + x\*x |( S )      |
+|   E+F | F -> x  | E + F + x\*x |( R )      |
+|   E+T | T -> F  | E + T + x\*x |( R )      |
+|   E   | E -> E+T| E + x\*x     |( R )      |
+| -     |       - |        -     |         - |
+|   E+  |         | E + x\*x     |( S )      |
+|   E+x |         | E + x\*x     |( S )      |
+|   E+F | F -> x  | E + x\*x     |( R )      |
+|   E+T | T -> F  | E + T\*x     |( R )      |
+| -     |       - |        -     |         - |
+| E+T\* |         | E + T\*x     |( S )      |
+| E+T\*x|         | E + T\*x     |( S )      |
+| E+T\*F| F -> x  | E + T\*F     |( R )      |
+| E+T   |T -> T\*F| E + T        |( R )      |
+| E     |T -> E+T | E            |( R )      |
+
+___
+
+|   | E | T | F | + | * | ( | ) | x | ⊢ |
+| - | - | - | - | - | - | - | - | - | - |
+| 1 |S2 |S5 |S8 |   |   |S9 |   |S12|   |
+| 2 |   |   |   |S3 |   |   |   |   |   |
+| 3 |   |S4 |S8 |   |   |S9 |   |S12|   |
+| 4 |   |   |   |R1 |S6 |   |R1 |   |R1 |
+| 5 |   |   |   |R2 |S6 |   |R2 |   |R2 |
+| 6 |   |   |S7 |   |   |S9 |   |S12|   |
+| 7 |   |   |   |R3 |R3 |   |R3 |   |R3 |
+| 8 |   |   |   |R4 |R4 |   |R4 |   |R4 |
+| 9 |S10|S5 |S8 |   |   |S9 |   |S12|   |
+| 10|   |   |   |S3 |   |   |S11|   |   |
+| 11|   |   |   |R5 |R5 |   |R5 |   |R5 |
+| 12|   |   |   |R6 |R6 |   |R6 |   |R6 |
+
+___
+
+Разберем способ составления таблицы, если дана грамматика:
+
+$P \rightarrow bD;Se$
+$D \rightarrow d;d$
+$S \rightarrow s;s$
+
+Начинаем размечать состояния пошагово:
+
+$P \rightarrow _1b_2D;Se$
+$D \rightarrow _2d;d$
+$S \rightarrow s;s$
+
+При обработке каждого символа состояние меняется:
+
+$P \rightarrow _1b_2D_3;_4Se$
+$D \rightarrow _2d;d$
+$S \rightarrow _4s;s$
+
+В конечном итоге имеем:
+
+$P \rightarrow _1b_2D_3;_4S_5e_6$
+$D \rightarrow _2d_7;_8d_9$
+$S \rightarrow _4s_{10};_{11}s_{12}$
+
+Процесс синтаксического анализа проходит так:
+
+|State stack     |Symbol stack|Sentence |
+|-               |-           |-        |
+|1               |            |bd;d;s;se|
+|1 2             |b           |bd;d;s;se|
+|1 2 7           |bd          |bd;d;s;se|
+|1 2 7 8         |bd;         |bd;d;s;se|
+|1 2 7 8 9       |bd;d        |bd;d;s;se|
+|1 2             |b           |bD;s;se  |
+|1 2 3           |bD          |bD;s;se  |
+|1 2 3 4         |bD;         |bD;s;se  |
+|1 2 3 4 10      |bD;s        |bD;s;se  |
+|1 2 3 4 10 11   |bD;s;       |bD;s;se  |
+|1 2 3 4 10 11 12|bD;s;s      |bD;s;se  |
+|1 2 3 4         |bD;         |bD;s;se  |
+|1 2 3 4 5       |bD;S        |bD;Se    |
+|1 2 3 4 5 6     |bD;Se       |bD;Se    |
+|1               |            |bD;Se    |
+|1               |P           |P        |
+___
+
+|   | P | D | S | b | e | d | ; | s | ⊢ |
+| - | - | - | - | - | - | - | - | - | - |
+| 1 |   |   |   |S2 |   |   |   |   |   |
+| 2 |   |S3 |   |   |   |S7 |   |   |   |
+| 3 |   |   |   |   |   |   |S4 |   |   |
+| 4 |   |   |S5 |   |   |   |   |S10|   |
+| 5 |   |   |   |   |S6 |   |   |   |   |
+| 6 |R1 |R1 |R1 |R1 |R1 |R1 |R1 |R1 |R1 |
+| 7 |   |   |   |   |   |   |S8 |   |   |
+| 8 |   |   |   |   |   |S9 |   |   |   |
+| 9 |R2 |R2 |R2 |R2 |R2 |R2 |R2 |R2 |R2 |
+| 10|   |   |   |   |   |   |S11|   |   |
+| 11|   |   |   |   |   |   |   |S12|   |
+| 12|R3 |R3 |R3 |R3 |R3 |R3 |R3 |R3 |R3 |
+___
+
+### Home practice 
+
+(to be... on midterm?)
+
+$E \rightarrow E + T$
+$E \rightarrow T$
+$T \rightarrow T*F$
+$T \rightarrow F$
+$F \rightarrow (E)$
+$F \rightarrow x$
+
 ___
 
 ## Coding
@@ -208,3 +329,5 @@ In your homework you will get a code snippet.
 - Build a grammar for this code snippet.
 - Use lex+bison to create a lexer + parser bundle
 - Write translator in JSON format for the lex + bison bundle
+
+___
