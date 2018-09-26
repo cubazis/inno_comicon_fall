@@ -14,11 +14,13 @@ almost all solved 1-2, no one solved 3. Repeat.
 
 ### The problem (LL(1) parse table, etc). 
 We have a grammar, could we parse it with LL(x) and what x can be?
+```
 A → BwA
 A → eps
 B → CxB
 B → yC
 C → z
+```
 It isn’t left recursive, it is left factored already, and it is not obviously ambiguous. So the only way to definitively answer the question is to build the parsing table and check for conflicts. 
 
 Link how to construct parse table, first, follow sets:
@@ -26,12 +28,14 @@ https://s3.amazonaws.com/content.udacity-data.com/courses/gt-cs6241/courseNotes/
 
 Below we show the grammar is LL(1), as the LL(1) parsing table
 has at most one production per entry.
+```
 First( C) = {z}
 First(B) = First( C) + y = {y,z}
 First(A) = First(B) = {y,z} + \epsilon = {y,z,\epsilon}
 Follow(A) = { $ }
 Follow(B) = { w }
 Follow( C) = { x,w }
+```
 
 | _ | w | x | y | z   | $  |
 | - | - | - | - | -   | -  |
