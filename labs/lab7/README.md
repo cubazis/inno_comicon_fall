@@ -23,7 +23,7 @@ Answer:
 
 Question:
 
-![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/dev/imgs/7_1.jpg)
+![GitHub](https://github.com/cubazis/inno_comicon_fall/blob/master/imgs/7_1.jpg)
 
 
 ## Conflicts
