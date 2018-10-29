@@ -93,20 +93,24 @@ disassembleChunk(&chunk, "test chunk");
 ___
 
 ### Lexical Grammar
-
+```
 NUMBER         → DIGIT+ ( "." DIGIT+ )? ;
 STRING         → '"' <any char except '"'>* '"' ;
 IDENTIFIER     → ALPHA ( ALPHA | DIGIT )* ;
 ALPHA          → 'a' ... 'z' | 'A' ... 'Z' | '_' ;
 DIGIT          → '0' ... '9' ;
+```
 ___
 
 ### Syntax Grammar
 
+```
 program        → declaration* EOF ;
+```
 
 #### declaration
 
+```
 declaration    → classDecl
                | funDecl
                | varDecl
@@ -116,9 +120,11 @@ classDecl      → "class" IDENTIFIER ( "<" IDENTIFIER )?
                  "{" function* "}" ;
 funDecl        → "fun" function ;
 varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+```
 
 #### statement
 
+```
 statement      → exprStmt
                | forStmt
                | ifStmt
@@ -136,9 +142,11 @@ printStmt      → "print" expression ";" ;
 returnStmt     → "return" expression? ";" ;
 whileStmt      → "while" "(" expression ")" statement ;
 block          → "{" declaration* "}" ;
+```
 
 #### expression
 
+```
 expression     → assignment ;
 
 assignment     → ( call "." )? IDENTIFIER "=" assignment
@@ -156,11 +164,14 @@ call           → primary ( "(" arguments? ")" | "." IDENTIFIER )* ;
 primary        → "true" | "false" | "nil" | "this"
                | NUMBER | STRING | IDENTIFIER | "(" expression ")"
                | "super" "." IDENTIFIER ;
+```
 
 #### Helper rules
-           
+
+```           
 function       → IDENTIFIER "(" parameters? ")" block ;
 parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
 arguments      → expression ( "," expression )* ;
+```
 
 ___
