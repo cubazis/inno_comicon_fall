@@ -1,0 +1,7 @@
+D:\Aidar\Innopolis\BS 3 DS2 Fall\Compilers Construction\Labs\git\inno_comicon_fall\gradings\labs\valeev-aidar\lang_m\src\bin\Debug\src.exe.config
+D:\Aidar\Innopolis\BS 3 DS2 Fall\Compilers Construction\Labs\git\inno_comicon_fall\gradings\labs\valeev-aidar\lang_m\src\bin\Debug\src.exe
+D:\Aidar\Innopolis\BS 3 DS2 Fall\Compilers Construction\Labs\git\inno_comicon_fall\gradings\labs\valeev-aidar\lang_m\src\bin\Debug\src.pdb
+D:\Aidar\Innopolis\BS 3 DS2 Fall\Compilers Construction\Labs\git\inno_comicon_fall\gradings\labs\valeev-aidar\lang_m\src\obj\Debug\src.csprojAssemblyReference.cache
+D:\Aidar\Innopolis\BS 3 DS2 Fall\Compilers Construction\Labs\git\inno_comicon_fall\gradings\labs\valeev-aidar\lang_m\src\obj\Debug\src.csproj.CoreCompileInputs.cache
+D:\Aidar\Innopolis\BS 3 DS2 Fall\Compilers Construction\Labs\git\inno_comicon_fall\gradings\labs\valeev-aidar\lang_m\src\obj\Debug\src.exe
+D:\Aidar\Innopolis\BS 3 DS2 Fall\Compilers Construction\Labs\git\inno_comicon_fall\gradings\labs\valeev-aidar\lang_m\src\obj\Debug\src.pdb
