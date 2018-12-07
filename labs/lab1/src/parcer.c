@@ -55,6 +55,7 @@ void* lex()
 
 				case '\n':
 				case '\t':
+                case '\r': // !
 				case ' ' : break;
 
 				default:
@@ -98,40 +99,66 @@ void expression()
 {
 	/* expression -> term expression' */
 
-	/** YOUR CODE HERE */
+    /** YOUR CODE HERE */
+    term();
+    expr_prime();
 }
 
 void term()
 {
 	/* term -> factor term' */
 
-	/** YOUR CODE HERE */
+    /** YOUR CODE HERE */
+    factor();
+    term_prime();
 }
 
 void expr_prime()
 {
 	/* expression' -> PLUS term expression'
-	 *              | epsilon
-	 */
+     *              | epsilon
+     */
 
-	/** YOUR CODE HERE */
+    /** YOUR CODE HERE */
+    if (match(_PLUS)) {
+        strcat(parser_result, "PLUS ");
+        advance();
+        term();
+        expr_prime();
+    }
 }
 
 void term_prime()
 {
 	/* term' -> TIMES factor term'
-	 *       |   epsilon
-	 */
+     *       |   epsilon
+     */
 
-	/** YOUR CODE HERE */
+    /** YOUR CODE HERE */
+    if (match(_TIMES)) {
+        strcat(parser_result, "TIMES ");
+        advance();
+        factor();
+        term_prime();
+    }
 }
 
 void factor()
 {
 	/* factor   ->    NUM_OR_ID
-	 *          |     LP expression RP
-	 */
-	/** YOUR CODE HERE */
+     *          |     LP expression RP
+     */
+    /** YOUR CODE HERE */
+    if (match(_NUM)) {
+        strcat(parser_result, "NUM ");
+        advance();
+    } else if (match(_LP)) {
+        strcat(parser_result, "LP ");
+        advance();
+        expression();
+        if (match(_RP))
+            advance();
+    }
 }
 
 void statements()
