@@ -28,6 +28,31 @@ START_TEST (test_lex_0)
 END_TEST
 
 /** YOUR TESTS HERE */
+START_TEST (test_lex_1)
+	{
+		char* input = "1337;";
+		char* pattern = "NUM SEM EOF";
+		file = fmemopen(input, strlen(input), "r");
+
+		int res = (int)lex();
+
+		printf("%d\n", res);
+		ck_assert_int_eq(res, pattern);
+	}
+END_TEST
+
+START_TEST (test_lex_2)
+	{
+		char* input = "(1123+124) * 123; ";
+		char* pattern = "LP NUM PLUS NUM TIMES NUM SEMI EOF";
+		file = fmemopen(input, strlen(input), "r");
+
+		int res = (int)lex();
+
+		printf("%d\n", res);
+		ck_assert_int_eq(res, pattern);
+	}
+END_TEST
 
 
 /***************************************************************************************************/
@@ -131,6 +156,8 @@ Suite* str_suite (void)
 
 
 	tcase_add_test(tcase, test_lex_0);
+	tcase_add_test(tcase, test_lex_1);
+	tcase_add_test(tcase, test_lex_2);
 
 	tcase_add_test(tcase, test_parser_0);
 	tcase_add_test(tcase, test_parser_1);
