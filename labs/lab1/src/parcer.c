@@ -55,6 +55,7 @@ void* lex()
 
 				case '\n':
 				case '\t':
+				case '\r':
 				case ' ' : break;
 
 				default:
